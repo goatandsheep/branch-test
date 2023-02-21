@@ -14,7 +14,7 @@ Complications of data variation:
 
 ## Architecture
 
-Firstly, setting up a data architecture needs to have a set of goals that are consistent and help keep things on the same page as things change. For example, some data goals could be to educate folks on how to vote. This means the focus is less on historic data and so data can be limited to recent previous years just enough to understand how current elected officials have voted on things, but not too far back. 
+Firstly, setting up a data architecture needs to have a set of goals that are consistent and help keep things on the same page as things change. For example, some data goals could be to educate folks on how to vote. This means the focus is less on historic data and so data can be limited to recent previous years just enough to understand how current elected officials have voted on things, but not too far back. Perhaps it could be voting history with a minimum of 5 years where possible. Data goals should also be feasible. Perhaps gerrymandering, i.e. changes to county boundaries is not within the scope because otherwise voting would have to be known at a zip code level. 
 
 In this case, redundancy is 
 
