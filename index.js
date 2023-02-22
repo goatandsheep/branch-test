@@ -64,8 +64,6 @@ async function scrapeCandidates(electionISO) {
             let optionDate = await slashDateParser(optionText, todayTime)
             if (optionDate <= electionDate && (!recentElection || optionDate >= recentElection)) {
                 recentElection = optionText
-                // console.log('varl')
-                // console.log(await option.inputValue())
             }
         }
     }
@@ -81,7 +79,6 @@ async function scrapeCandidates(electionISO) {
                 let optionDate = await slashDateParser(optionText, todayTime)
                 if (!recentElection || optionDate >= recentElection) {
                     recentElection = optionText
-                    // console.log(await option.inputValue())
                 }
             }
         }
@@ -93,13 +90,62 @@ async function scrapeCandidates(electionISO) {
     submitButton.click()
     await page.waitForTimeout(2000); // wait for 2 seconds
 
-
+    let i = 0
+    let candidates = []
+    for (const candidate of await page.locator('.col1Inner > table > tbody > tr').all()) {
+        if (i > 1) {
+            let candidateDetails = {}
+            for (const line of await candidate.locator('td > table > tbody > tr > td').all()) {
+                const lineText = await line.innerText()
+                const lineDetails = lineText.split(':')
+                if (lineDetails.length > 1) {
+                    switch(lineDetails[0]) {
+                        case 'E-mail':
+                            candidateDetails.email = lineDetails[1]
+                        break;
+                        case 'PHONE NUMBER':
+                            candidateDetails.phone = lineDetails[1]
+                        break;
+                        case 'PARTY':
+                            candidateDetails.party = lineDetails[1]
+                        break;
+                        case 'INCUMBENT':
+                            candidateDetails.incumbent = lineDetails[1] === 'YES'
+                        break;
+                        case 'OCCUPATION':
+                            candidateDetails.occupation = lineDetails[1]
+                        break;
+                        case 'QUALIFIED DATE':
+                            candidateDetails.date = lineDetails[1]
+                        break;
+                        case 'WEBSITE':
+                            candidateDetails.website = lineDetails[1]
+                        break;
+                    }
+                } else {
+                    if (!('name' in candidateDetails)) {
+                        candidateDetails.name = lineDetails[0]
+                    } else if (!('address1' in candidateDetails)) {
+                        candidateDetails.addres1 = lineDetails[0]
+                    } else if (!('address2' in candidateDetails)) {
+                        candidateDetails.address2 = lineDetails[0]
+                    }
+                }
+            }
+            candidates.push(candidateDetails)
+        }
+        i++
+    }
     await browser.close();
     // 3. It should pull up the candidate list for the election date given, or the most recent election date if none
     // was given.
     // 4. It should take these candidates / races and turn them into a JSON object. You do not have to do any
     // standardization or cleaning of the data fields.
-    return []
+
+    console.log('candidates', candidates)
+    return [{
+        candidates
+    }]
 }
 
 module.exports = {
