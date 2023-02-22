@@ -1,5 +1,10 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
+const { scrapeCandidates } = require('../index')
+
+test('run scrape', async({}) => {
+  await scrapeCandidates()
+})
 
 test('has title', async ({ page }) => {
   await page.goto('https://playwright.dev/');
