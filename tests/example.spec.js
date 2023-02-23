@@ -2,8 +2,16 @@
 const { test, expect } = require('@playwright/test');
 const { scrapeCandidates } = require('../index')
 
-test('run scrape', async({}) => {
-  await scrapeCandidates()
+test('run scrape', async() => {
+  const races = await scrapeCandidates()
+  await expect(races.length).toBeGreaterThan(2)
+  await expect(races[0].candidates.length).toBeGreaterThan(0)
+})
+test('run scrape date', async() => {
+  const races = await scrapeCandidates('2023-01-02')
+  console.log(JSON.stringify(races))
+  await expect(races.length).toBeGreaterThan(0)
+  await expect(races[0].candidates.length).toBeGreaterThan(0)
 })
 
 test('has title', async ({ page }) => {
